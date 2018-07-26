@@ -1,0 +1,6 @@
+server:
+  port: 8086
+
+job:
+  requestUrl: http://ll.logithing.cn:8066/kettle/fetchKettleJobs
+  resultUrl: http://ll.logithing.cn:8066/kettle/sendKettleJobResult
