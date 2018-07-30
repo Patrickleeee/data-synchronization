@@ -4,8 +4,3 @@ server:
 job:
   requestUrl: http://ll.logithing.cn:8066/kettle/fetchKettleJobs
   resultUrl: http://ll.logithing.cn:8066/kettle/sendKettleJobResult
-
-oss:
-  endpoint: oss-cn-shanghai.aliyuncs.com
-  accessKeyId: LTAI7OoDpcwr5pZH
-  accessKeySecret: bXVcNHkNgCMpW5LjYjaZ0aq60A7PBR

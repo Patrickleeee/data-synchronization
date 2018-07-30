@@ -8,14 +8,10 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 
 /**
  * Desciption OssClient工具类
@@ -28,19 +24,11 @@ public class OssClientUtil {
     private static final Logger LOG = LoggerFactory.getLogger(OssClientUtil.class);
 
     //阿里云API的内或外网域名
-    private static final String ENDPOINT = "http://oss-cn-shanghai.aliyuncs.com";
+    private static final String ENDPOINT = "XXX";
     //阿里云API的密钥Access Key ID
-    private static final String ACCESS_KEY_ID = "LTAI7OoDpcwr5pZH";
+    private static final String ACCESS_KEY_ID = "XXX";
     //阿里云API的密钥Access Key Secret
-    private static final String ACCESS_KEY_SECRET = "bXVcNHkNgCMpW5LjYjaZ0aq60A7PBR";
-
-    //init static datas
-//    static {
-//        ResourceBundle bundle = PropertyResourceBundle.getBundle("oss.properties");
-//        ENDPOINT = !bundle.containsKey("endpoint") ? "" : bundle.getString("endpoint");
-//        ACCESS_KEY_ID = !bundle.containsKey("accessKeyId") ? "" : bundle.getString("accessKeyId");
-//        ACCESS_KEY_SECRET = !bundle.containsKey("accessKeySecret") ? "" : bundle.getString("accessKeySecret");
-//    }
+    private static final String ACCESS_KEY_SECRET = "XXX";
 
     /**
      * 获取阿里云OSS客户端对象
