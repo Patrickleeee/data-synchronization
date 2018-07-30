@@ -2,6 +2,7 @@ package com.witium.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.witium.config.QuartzScheduler;
+import com.witium.model.DynamicJob;
 import com.witium.model.TaskJob;
 import com.witium.service.KettleService;
 import com.witium.util.JobUtil;
@@ -39,7 +40,7 @@ public class KettleServiceImpl implements KettleService {
     private String resultUrl;
 
     /**
-     * 获取定时任务接口
+     * 接口调用-获取定时任务接口
      *
      * @return
      */
@@ -54,34 +55,58 @@ public class KettleServiceImpl implements KettleService {
         return result;
     }
 
+    /**
+     * 接口调用-反馈回调
+     *
+     * @param job
+     * @param key
+     * @return
+     */
+    @Override
+    public String sendJobsResult(String job, String key) {
+        JSONObject request = new JSONObject();
+        request.put("jobName", job);
+        request.put("result", key);
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, request.toString());
+
+        String result = Okhttp3Util.post(this.resultUrl, body);
+        return result;
+    }
+
+    /**
+     * 任务发生变化时，执行变更（没有发生变化的不做处理）
+     *
+     * @param jobs
+     * @param lastJobs
+     */
+    @Override
     public void executeJobs(String jobs, String lastJobs) {
 
-        Map<String, List<TaskJob>> changeJobs = JobUtil.getJobs(jobs, lastJobs);
-        if (changeJobs.isEmpty()) {
-            return;
-        }
+        DynamicJob changeJobs = JobUtil.getJobs(jobs, lastJobs);
 
         // 删除任务
-        List<TaskJob> deleteJobs = changeJobs.get("deleteJobs");
-        deleteJobs.forEach(job -> {
-            try {
-                quartzScheduler.deleteJob(job.getName(), "group");
-            } catch (SchedulerException e) {
-                e.printStackTrace();
-            }
-        });
+        if (changeJobs != null && changeJobs.getDelJobs() != null && !changeJobs.getDelJobs().isEmpty()) {
+            changeJobs.getDelJobs().forEach(job -> {
+                try {
+                    quartzScheduler.deleteJob(job.getName(), "group");
+                } catch (SchedulerException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
 
-        // 新增任务
-        List<TaskJob> addJobs = changeJobs.get("addJobs");
+        // 开启新增Job
+        if (changeJobs != null && changeJobs.getAddJobs() != null && !changeJobs.getAddJobs().isEmpty()) {
+            changeJobs.getAddJobs().forEach(job -> {
+                try {
+                    quartzScheduler.startJob(job.getFile(), job.getCorn(), job.getName(), "group");
+                } catch (SchedulerException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
 
-        // TODO OSS下载文件
-        addJobs.forEach(job -> {
-            try {
-                quartzScheduler.startJob(job.getFile(), job.getCorn(), job.getName(), "group");
-            } catch (SchedulerException e) {
-                e.printStackTrace();
-            }
-        });
     }
 
 }

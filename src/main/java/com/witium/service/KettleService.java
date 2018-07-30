@@ -8,4 +8,8 @@ package com.witium.service;
  */
 public interface KettleService {
     String getKettleJobs();
+
+    String sendJobsResult(String job, String key);
+
+    void executeJobs(String jobs, String lastJobs);
 }

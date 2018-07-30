@@ -32,21 +32,25 @@ public class KettleJob {
     @Autowired
     private KettleService kettleService;
 
-    @Scheduled(cron = "0 04 17 * * ?")
+    @Scheduled(cron = "0 33 9 * * ?")
     public void runTask() throws Exception {
-        LOGGER.info("【kettle定时任务运行开始】");
+        LOGGER.info("【本地定时任务运行开始】");
         String lastJobs = this.request;
         String jobs = kettleService.getKettleJobs();
         // 两次结果未发生变化，不做处理
         if (StringUtils.equals(lastJobs, jobs)) {
             return;
         }
-        LOGGER.info("【接口任务有变化】");
+        LOGGER.info("【任务列表中的kettle任务有变化】");
         this.request = jobs;
 
-        // TODO 有变化时，关闭相同的任务，开启新的任务
+        // 有变化时，不处理两次请求中相同的任务，删除已不存在的任务，开启新的任务
+        try {
+            kettleService.executeJobs(jobs, lastJobs);
+        } catch (Exception e) {
+            LOGGER.error("【任务列表中的kettle定时任务执行失败】");
+        }
 
-
-        LOGGER.info("【kettle定时任务运行结束】");
+        LOGGER.info("【本地定时任务运行结束】");
     }
 }

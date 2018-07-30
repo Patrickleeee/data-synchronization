@@ -2,14 +2,13 @@ package com.witium.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.witium.model.DynamicJob;
 import com.witium.model.TaskJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -27,7 +26,14 @@ public class JobUtil {
         throw new Error("Don't instance of " + getClass());
     }
 
-    public static Map<String, List<TaskJob>> getJobs(String firstString, String secondString) {
+    /**
+     * 动态任务结果
+     *
+     * @param firstString
+     * @param secondString
+     * @return
+     */
+    public static DynamicJob getJobs(String firstString, String secondString) {
 
         List<String> first = new ArrayList<>();
         List<String> second = new ArrayList<>();
@@ -49,16 +55,16 @@ public class JobUtil {
         List<String> intersection = first.stream().filter(second::contains).collect(toList());
 
         // 待删除的任务
-        List<String> deleteJobs = first.stream().filter(item -> !intersection.contains(item)).collect(toList());
-        List<TaskJob> deleteJobList = deleteJobs.stream().map(job -> JSON.parseObject(job, TaskJob.class)).collect(toList());
+        List<String> delJobs = first.stream().filter(item -> !intersection.contains(item)).collect(toList());
+        List<TaskJob> delJobList = delJobs.stream().map(job -> JSON.parseObject(job, TaskJob.class)).collect(toList());
 
         // 待新增的任务
         List<String> addJobs = second.stream().filter(item -> !intersection.contains(item)).collect(toList());
         List<TaskJob> addJobList = addJobs.stream().map(job -> JSON.parseObject(job, TaskJob.class)).collect(toList());
 
-        Map<String, List<TaskJob>> result = new HashMap<>();
-        result.put("deleteJobs", deleteJobList);
-        result.put("addJobs", addJobList);
+        DynamicJob result = new DynamicJob();
+        result.setAddJobs(addJobList);
+        result.setDelJobs(delJobList);
         return result;
     }
 }

@@ -36,7 +36,7 @@ public class QuartzScheduler {
      * @throws SchedulerException
      */
     public void startJob(String file, String corn, String jobName, String groupName) throws SchedulerException {
-        startJob(scheduler, "D:/kettle/localTest/test_json.ktr", corn, jobName, groupName);
+        startJob(scheduler, file, corn, jobName, groupName);
         scheduler.start();
     }
 
