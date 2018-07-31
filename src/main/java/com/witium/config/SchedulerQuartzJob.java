@@ -82,6 +82,10 @@ public class SchedulerQuartzJob implements Job {
         KettleUtil.callNativeTrans(this.file);
         // 将"/tmp"上传目录下的文件至OSS
         String key = this.uploadFile(this.jobName);
+        if (StringUtils.isEmpty(key)) {
+            log.info("【平台任务{}上传至OSS失败】", this.jobName);
+            return;
+        }
         log.info("【平台任务{}上传至OSS成功】", this.jobName);
         // 将成功的key反馈
         String result = this.sendJobsResult(this.jobName, key);
@@ -97,8 +101,9 @@ public class SchedulerQuartzJob implements Job {
         String bucketName = "aircompressor";
 
         //上传文件
-        String flilePathName = this.fileUrl + "/" + fileName + ".xls_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".xls";
-        File file = new File(flilePathName);
+//        String flilePathName =File.separator + this.fileUrl + File.separator + fileName + ".xls_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".xls";
+        String filePathName =File.separator + this.fileUrl + File.separator + fileName + "_" + new SimpleDateFormat("yyyyMMdd").format(new Date()) + ".xls";
+        File file = new File(filePathName);
         String diskName = "";
         String md5key = OssClientUtil.uploadFile(OssClientUtil.getOSSClient(), file, bucketName, diskName);
         log.info("上传后的文件MD5数字唯一签名:" + md5key);  //上传后的文件MD5数字唯一签名:A30B046A34EB326C4A3BBD784333B017

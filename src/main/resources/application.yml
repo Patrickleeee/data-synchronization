@@ -6,5 +6,5 @@ job:
   resultUrl: http://ll.logithing.cn:8066/kettle/sendKettleJobResult
 
 file:
-#  url: /tmp
-  url: D:\kettle\localTest
+  url: tmp
+#  url: D:\kettle\localTest

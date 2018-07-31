@@ -33,11 +33,12 @@ public class KettleJob {
         String jobs = kettleService.getKettleJobs();
         // 两次结果未发生变化，不做处理
         if (StringUtils.equals(lastJobs, jobs)) {
+            LOGGER.info("【任务列表中的kettle任务无变化】");
+            LOGGER.info("【本地定时任务运行结束】");
             return;
         }
+
         LOGGER.info("【任务列表中的kettle任务有变化】");
-
-
         // 有变化时，不处理两次请求中相同的任务，删除已不存在的任务，开启新的任务
         try {
             kettleService.executeJobs(jobs, lastJobs);
