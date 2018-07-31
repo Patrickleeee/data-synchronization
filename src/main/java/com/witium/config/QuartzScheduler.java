@@ -2,6 +2,7 @@ package com.witium.config;
 
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Date;
@@ -14,12 +15,22 @@ import java.util.Date;
  */
 @Configuration
 public class QuartzScheduler {
+
+    // 任务执行结果上传地址
+    @Value("${job.resultUrl}")
+    private String resultUrl;
+
+    // 服务器暂存文件地址
+    @Value("${file.url}")
+    private String fileUrl;
+
     // 任务调度
     @Autowired
     private Scheduler scheduler;
 
     /**
      * 开始执行所有任务
+     *
      * @throws SchedulerException
      */
     public void startJob() throws SchedulerException {
@@ -147,6 +158,9 @@ public class QuartzScheduler {
         JobDetail jobDetail = JobBuilder
                 .newJob(SchedulerQuartzJob.class)// Job实现类，主要执行任务的逻辑
                 .usingJobData("file", file)// 加入属性到JobDataMap，可以在Job实现类中获取
+                .usingJobData("jobName", jobName)
+                .usingJobData("resultUrl", this.resultUrl)
+                .usingJobData("fileUrl", this.fileUrl)
                 .withIdentity(jobName, groupName)// 任务、分组
                 .build();
         // 基于表达式构建触发器

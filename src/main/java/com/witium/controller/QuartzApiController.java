@@ -29,7 +29,7 @@ public class QuartzApiController {
     @RequestMapping("/start")
     public void startQuartzJob() {
         try {
-            quartzScheduler.startJob("https://aircompressor.oss-cn-shanghai.aliyuncs.com/file/135e43970e334806b9b7274ebba385ee.ktr", "0 2 15 * * ?", "job", "group");
+            quartzScheduler.startJob("https://aircompressor.oss-cn-shanghai.aliyuncs.com/file/135e43970e334806b9b7274ebba385ee.ktr", "0 26 11 * * ?", "patrick", "group");
         } catch (SchedulerException e) {
             e.printStackTrace();
         }

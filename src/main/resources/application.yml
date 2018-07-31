@@ -4,3 +4,7 @@ server:
 job:
   requestUrl: http://ll.logithing.cn:8066/kettle/fetchKettleJobs
   resultUrl: http://ll.logithing.cn:8066/kettle/sendKettleJobResult
+
+file:
+#  url: /tmp
+  url: D:\kettle\localTest

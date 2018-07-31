@@ -12,4 +12,6 @@ public interface KettleService {
     String sendJobsResult(String job, String key);
 
     void executeJobs(String jobs, String lastJobs);
+
+    String uploadFile(String fileName);
 }

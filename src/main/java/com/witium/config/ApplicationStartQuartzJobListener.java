@@ -41,11 +41,12 @@ public class ApplicationStartQuartzJobListener implements ApplicationListener<Co
 
     /**
      * 初始注入scheduler
+     *
      * @return
      * @throws SchedulerException
      */
     @Bean
-    public Scheduler scheduler() throws SchedulerException{
+    public Scheduler scheduler() throws SchedulerException {
         SchedulerFactory schedulerFactoryBean = new StdSchedulerFactory();
         return schedulerFactoryBean.getScheduler();
     }

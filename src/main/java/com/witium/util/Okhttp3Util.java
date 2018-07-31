@@ -19,9 +19,10 @@ public class Okhttp3Util {
 
     /**
      * request type: get
-     * @param url       完整请求路径（如"https://127.0.0.0::8088/login"）
-     * @param params    拼接参数字段（如"?username=X&password=Y"）
-     * @return          网络请求成功的返回体
+     *
+     * @param url    完整请求路径（如"https://127.0.0.0::8088/login"）
+     * @param params 拼接参数字段（如"?username=X&password=Y"）
+     * @return 网络请求成功的返回体
      */
     public static String get(String url, String params) {
 
@@ -43,9 +44,10 @@ public class Okhttp3Util {
 
     /**
      * request type: post
-     * @param url       完整请求路径（如"https://127.0.0.0::8088/login"）
-     * @param body      表单参数
-     * @return          网络请求成功的返回体
+     *
+     * @param url  完整请求路径（如"https://127.0.0.0::8088/login"）
+     * @param body 表单参数
+     * @return 网络请求成功的返回体
      */
     public static String post(String url, RequestBody body) {
 
