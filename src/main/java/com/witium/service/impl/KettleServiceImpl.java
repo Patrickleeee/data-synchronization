@@ -166,10 +166,10 @@ public class KettleServiceImpl implements KettleService {
         String flilePathName = this.fileUrl + "/" + fileName + ".xls_" + new SimpleDateFormat("yyyyMMdd").format(new Date());
         File file = new File(flilePathName);
         String diskName = "";
-        String md5key = OssClientUtil.uploadFile(OssClientUtil.getOSSClient(), file, bucketName, diskName);
-        log.info("上传后的文件MD5数字唯一签名:" + md5key);  //上传后的文件MD5数字唯一签名:A30B046A34EB326C4A3BBD784333B017
+        String url = OssClientUtil.uploadFile(OssClientUtil.getOSSClient(), file, bucketName, diskName);
+        log.info("上传后的文件下载地址:" + url);  //上传后的文件MD5数字唯一签名:A30B046A34EB326C4A3BBD784333B017
 
-        return md5key;
+        return url;
     }
 
 }

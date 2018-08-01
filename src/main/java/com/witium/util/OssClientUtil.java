@@ -6,12 +6,16 @@ import com.aliyun.oss.model.Bucket;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * Desciption OssClient工具类
@@ -65,7 +69,7 @@ public class OssClientUtil {
      * @param file       上传文件
      * @param bucketName bucket名称
      * @param diskName   上传文件的目录  --bucket下文件的路径
-     * @return String 唯一MD5数字签名
+     * @return String url下载地址
      */
     public static final String uploadFile(OSSClient client, File file, String bucketName, String diskName) {
         String resultStr = null;
@@ -73,6 +77,7 @@ public class OssClientUtil {
             InputStream is = new FileInputStream(file);
             String fileName = file.getName();
             Long fileSize = file.length();
+            String suffix = fileName.substring(fileName.lastIndexOf('.'));
             //创建上传Object的Metadata
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(is.available());
@@ -81,10 +86,16 @@ public class OssClientUtil {
             metadata.setContentEncoding("utf-8");
             metadata.setContentType(getContentType(fileName));
             metadata.setContentDisposition("filename/filesize=" + fileName + "/" + fileSize + "Byte.");
+
+            fileName = UUID.randomUUID().toString().trim().replaceAll("-", "").toLowerCase() + suffix;
+            String key = diskName + '/' + fileName;
             //上传文件
             PutObjectResult putResult = client.putObject(bucketName, diskName + fileName, is, metadata);
             //解析结果
-            resultStr = putResult.getETag();
+            if (StringUtils.isNotEmpty(putResult.getETag())) {
+                LOG.info("上传后的文件MD5数字唯一签名:" + putResult.getETag());
+                resultStr = "http://"+ bucketName +".oss-cn-shanghai.aliyuncs.com" + key;
+            }
         } catch (Exception e) {
             LOG.error("上传阿里云OSS服务器异常." + e.getMessage(), e);
         }
