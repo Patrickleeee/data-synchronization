@@ -2,8 +2,12 @@ server:
   port: 8086
 
 job:
+# 定时任务列表
   requestUrl: http://ll.logithing.cn:8066/kettle/fetchKettleJobs
+# 回调任务执行结果
   resultUrl: http://ll.logithing.cn:8066/kettle/sendKettleJobResult
+# 心跳
+  heartBeatUrl: http://ll.logithing.cn:8066/kettle/sendKettleJobHeartBeat
 
 file:
   url: tmp
