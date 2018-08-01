@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Desciption 动态任务封装API
@@ -44,6 +46,17 @@ public class QuartzApiController {
             e.printStackTrace();
         }
         return info;
+    }
+
+    @GetMapping("/infos")
+    public List<String> getQuartzJobs() {
+        List<String> infos = new ArrayList<>();
+        try {
+            infos = quartzScheduler.getAllJobInfos();
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+        return infos;
     }
 
     @RequestMapping("/modify")

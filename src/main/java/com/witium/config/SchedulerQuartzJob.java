@@ -78,6 +78,8 @@ public class SchedulerQuartzJob implements Job {
      * 需要执行的业务
      */
     private void task() throws Exception {
+        Long startTime = System.currentTimeMillis();
+
         // 执行kettle任务，将文件保存在"/tmp"目录下
         KettleUtil.callNativeTrans(this.file);
         // 将"/tmp"上传目录下的文件至OSS
@@ -87,8 +89,11 @@ public class SchedulerQuartzJob implements Job {
             return;
         }
         log.info("【平台任务{}上传至OSS成功】", this.jobName);
+
+        Long endTime = System.currentTimeMillis();
+
         // 将成功的key反馈
-        String result = this.sendJobsResult(this.jobName, key);
+        String result = this.sendJobsResult(this.jobName, key, startTime, endTime);
         if (StringUtils.isNotBlank(result) && StringUtils.equals(JSON.parseObject(result).getString("state"), "200")) {
             log.info("【平台任务{}执行结果反馈至平台成功】", this.jobName);
         } else {
@@ -111,10 +116,12 @@ public class SchedulerQuartzJob implements Job {
         return md5key;
     }
 
-    public String sendJobsResult(String job, String key) {
+    public String sendJobsResult(String job, String key, Long startTime, Long endTime) {
         JSONObject request = new JSONObject();
         request.put("jobName", job);
         request.put("result", key);
+        request.put("startTime", startTime);
+        request.put("endTime", endTime);
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(JSON, request.toString());
 

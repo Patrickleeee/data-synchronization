@@ -1,11 +1,15 @@
 package com.witium.config;
 
 import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Desciption 任务调度处理
@@ -64,6 +68,32 @@ public class QuartzScheduler {
         CronTrigger cronTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);
         return String.format("time:%s,state:%s", cronTrigger.getCronExpression(),
                 scheduler.getTriggerState(triggerKey).name());
+    }
+
+    /**
+     * 获取所有Job信息
+     *
+     * @return
+     * @throws SchedulerException
+     */
+    public List<String> getAllJobInfos() throws SchedulerException {
+
+        List<String> result = new ArrayList<>();
+
+        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+        for (String groupName : scheduler.getJobGroupNames()) {
+
+            for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
+
+                String jobName = jobKey.getName();
+//                String jobGroup = jobKey.getGroup();
+//                //get job's trigger
+//                List<Trigger> triggers = (List<Trigger>) scheduler.getTriggersOfJob(jobKey);
+//                Date nextFireTime = triggers.get(0).getNextFireTime();
+                result.add(jobName);
+            }
+        }
+        return result;
     }
 
     /**

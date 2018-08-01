@@ -26,8 +26,11 @@ public class KettleJob {
     @Autowired
     private KettleService kettleService;
 
-    @Scheduled(cron = "0 */3 * * * ?")
+    @Scheduled(cron = "0 */2 * * * ?")
     public void runTask() throws Exception {
+        // 心跳
+        kettleService.sendHeartBeat();
+
         LOGGER.info("【本地定时任务运行开始】");
         String lastJobs = this.request;
         String jobs = kettleService.getKettleJobs();
